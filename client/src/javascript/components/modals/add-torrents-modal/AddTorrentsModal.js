@@ -3,6 +3,7 @@ import React from 'react';
 
 import AddTorrentsByFile from './AddTorrentsByFile';
 import AddTorrentsByURL from './AddTorrentsByURL';
+import AddTorrentsFromSearch from './AddTorrentsFromSearch';
 import Modal from '../Modal';
 import UIActions from '../../../actions/UIActions';
 
@@ -13,6 +14,13 @@ class AddTorrents extends React.Component {
 
   render() {
     let tabs = {
+      'by-search': {
+        content: AddTorrentsFromSearch,
+        label: this.props.intl.formatMessage({
+          id: 'torrents.add.tab.search.title',
+          defaultMessage: 'From Search'
+        })
+      },
       'by-url': {
         content: AddTorrentsByURL,
         label: this.props.intl.formatMessage({

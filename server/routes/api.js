@@ -14,6 +14,7 @@ const Filesystem = require('../models/Filesystem');
 const historyService = require('../services/historyService');
 const mediainfo = require('../util/mediainfo');
 const notificationService = require('../services/notificationService');
+const searchService = require('../services/searchService');
 const settings = require('../models/settings');
 
 router.use('/', passport.authenticate('jwt', {session: false}));
@@ -68,6 +69,10 @@ router.get('/notifications', (req, res, next) => {
 
 router.delete('/notifications', (req, res, next) => {
   notificationService.clearNotifications(req.query, ajaxUtil.getResponseFn(res));
+});
+
+router.get('/search', (req, res, next) => {
+  searchService.search(req.query, ajaxUtil.getResponseFn(res));
 });
 
 router.get('/settings', (req, res, next) => {
