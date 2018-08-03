@@ -1,10 +1,10 @@
-import _ from 'lodash';
+import _ from "lodash";
 
-import ActionTypes from '../constants/ActionTypes';
-import AppDispatcher from '../dispatcher/AppDispatcher';
-import BaseStore from './BaseStore';
-import EventTypes from '../constants/EventTypes';
-import FloodActions from '../actions/FloodActions';
+import ActionTypes from "../constants/ActionTypes";
+import AppDispatcher from "../dispatcher/AppDispatcher";
+import BaseStore from "./BaseStore";
+import EventTypes from "../constants/EventTypes";
+import FloodActions from "../actions/FloodActions";
 
 class UIStoreClass extends BaseStore {
   constructor() {
@@ -19,11 +19,9 @@ class UIStoreClass extends BaseStore {
     this.torrentDetailsHash = null;
     this.createStyleElement();
 
-    this.fetchDirectoryList = _.debounce(
-      this.fetchDirectoryList,
-      100,
-      {leading: true}
-    );
+    this.fetchDirectoryList = _.debounce(this.fetchDirectoryList, 100, {
+      leading: true
+    });
   }
 
   addGlobalStyle(cssString) {
@@ -32,8 +30,8 @@ class UIStoreClass extends BaseStore {
   }
 
   applyStyles() {
-    const {globalStyles, styleElement} = this;
-    const nextStyleString = globalStyles.join('');
+    const { globalStyles, styleElement } = this;
+    const nextStyleString = globalStyles.join("");
 
     while (styleElement.firstChild) {
       styleElement.removeChild(styleElement.firstChild);
@@ -42,16 +40,14 @@ class UIStoreClass extends BaseStore {
     if (styleElement.styleSheet) {
       styleElement.styleSheet.cssText = nextStyleString;
     } else {
-      styleElement.appendChild(
-        global.document.createTextNode(nextStyleString)
-      );
+      styleElement.appendChild(global.document.createTextNode(nextStyleString));
     }
   }
 
   createStyleElement() {
     if (this.styleElement == null) {
-      const stylesheetRef = global.document.createElement('style');
-      stylesheetRef.type = 'text/css';
+      const stylesheetRef = global.document.createElement("style");
+      stylesheetRef.type = "text/css";
 
       global.document.head.appendChild(stylesheetRef);
 
@@ -107,8 +103,20 @@ class UIStoreClass extends BaseStore {
     this.emit(EventTypes.FLOOD_FETCH_DIRECTORY_LIST_SUCCESS, response);
   }
 
+  handleWebSearchError(response) {
+    this.emit(EventTypes.FLOOD_WEB_SEARCH_ERROR, response);
+  }
+
+  handleWebSearchSuccess(response) {
+    this.emit(EventTypes.FLOOD_WEB_SEARCH_SUCCESS, response);
+  }
+
+  hasSatisfiedDependencies() {
+    return Object.keys(this.dependencies).length === 0;
+  }
+
   handleSetTaxonomySuccess() {
-    if (this.activeModal.id === 'set-taxonomy') {
+    if (this.activeModal.id === "set-taxonomy") {
       this.dismissModal();
     }
   }
@@ -118,14 +126,8 @@ class UIStoreClass extends BaseStore {
     this.emit(EventTypes.UI_TORRENT_DETAILS_HASH_CHANGE);
   }
 
-  hasSatisfiedDependencies() {
-    return Object.keys(this.dependencies).length === 0;
-  }
-
   removeGlobalStyle(cssString) {
-    this.globalStyles = this.globalStyles.filter(
-      style => style !== cssString
-    );
+    this.globalStyles = this.globalStyles.filter(style => style !== cssString);
 
     this.applyStyles();
   }
@@ -135,11 +137,11 @@ class UIStoreClass extends BaseStore {
       dependencies = [dependencies];
     }
 
-    dependencies.forEach((dependency) => {
-      let {id} = dependency;
+    dependencies.forEach(dependency => {
+      let { id } = dependency;
 
       if (!this.dependencies[id]) {
-        this.dependencies[id] = {...dependency, satisfied: false};
+        this.dependencies[id] = { ...dependency, satisfied: false };
       }
     });
 
@@ -147,8 +149,10 @@ class UIStoreClass extends BaseStore {
   }
 
   satisfyDependency(dependencyID) {
-    if (this.dependencies[dependencyID]
-      && !this.dependencies[dependencyID].satisfied) {
+    if (
+      this.dependencies[dependencyID] &&
+      !this.dependencies[dependencyID].satisfied
+    ) {
       this.dependencies[dependencyID].satisfied = true;
       this.emit(EventTypes.UI_DEPENDENCIES_CHANGE);
       this.verifyDependencies();
@@ -175,7 +179,7 @@ class UIStoreClass extends BaseStore {
   }
 
   verifyDependencies() {
-    let isDependencyLoading = Object.keys(this.dependencies).some((id) => {
+    let isDependencyLoading = Object.keys(this.dependencies).some(id => {
       return this.dependencies[id].satisfied === false;
     });
 
@@ -187,8 +191,8 @@ class UIStoreClass extends BaseStore {
 
 let UIStore = new UIStoreClass();
 
-UIStore.dispatcherID = AppDispatcher.register((payload) => {
-  const {action} = payload;
+UIStore.dispatcherID = AppDispatcher.register(payload => {
+  const { action } = payload;
 
   switch (action.type) {
     case ActionTypes.FLOOD_FETCH_DIRECTORY_LIST_ERROR:
@@ -196,6 +200,12 @@ UIStore.dispatcherID = AppDispatcher.register((payload) => {
       break;
     case ActionTypes.FLOOD_FETCH_DIRECTORY_LIST_SUCCESS:
       UIStore.handleFetchDirectoryListSuccess(action.data);
+      break;
+    case ActionTypes.FLOOD_WEB_SEARCH_SUCCESS:
+      UIStore.handleWebSearchSuccess(action.data);
+      break;
+    case ActionTypes.FLOOD_WEB_SEARCH_ERROR:
+      UIStore.handleWebSearchError(action.error);
       break;
     case ActionTypes.UI_CLICK_TORRENT:
       UIStore.handleTorrentClick(action.data.hash);

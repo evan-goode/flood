@@ -1,0 +1,14 @@
+.web-search {
+  &__table {
+    width: 100%;
+  }
+  &__cell--description {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 0;
+  }
+  &__cell--seeds {
+    text-align: right;
+  }
+}

@@ -1,11 +1,11 @@
-import {injectIntl} from 'react-intl';
-import React from 'react';
+import { injectIntl } from "react-intl";
+import React from "react";
 
-import AddTorrentsByFile from './AddTorrentsByFile';
-import AddTorrentsByURL from './AddTorrentsByURL';
-import AddTorrentsFromSearch from './AddTorrentsFromSearch';
-import Modal from '../Modal';
-import UIActions from '../../../actions/UIActions';
+import AddTorrentsByFile from "./AddTorrentsByFile";
+import AddTorrentsByURL from "./AddTorrentsByURL";
+import AddTorrentsFromWebSearch from "./AddTorrentsFromWebSearch";
+import Modal from "../Modal";
+import UIActions from "../../../actions/UIActions";
 
 class AddTorrents extends React.Component {
   dismissModal() {
@@ -14,25 +14,25 @@ class AddTorrents extends React.Component {
 
   render() {
     let tabs = {
-      'by-search': {
-        content: AddTorrentsFromSearch,
+      "by-search": {
+        content: AddTorrentsFromWebSearch,
         label: this.props.intl.formatMessage({
-          id: 'torrents.add.tab.search.title',
-          defaultMessage: 'From Search'
+          id: "torrents.add.tab.search.title",
+          defaultMessage: "From Search"
         })
       },
-      'by-url': {
+      "by-url": {
         content: AddTorrentsByURL,
         label: this.props.intl.formatMessage({
-          id: 'torrents.add.tab.url.title',
-          defaultMessage: 'By URL'
+          id: "torrents.add.tab.url.title",
+          defaultMessage: "By URL"
         })
       },
-      'by-file': {
+      "by-file": {
         content: AddTorrentsByFile,
         label: this.props.intl.formatMessage({
-          id: 'torrents.add.tab.file.title',
-          defaultMessage: 'By File'
+          id: "torrents.add.tab.file.title",
+          defaultMessage: "By File"
         })
       }
     };
@@ -40,8 +40,8 @@ class AddTorrents extends React.Component {
     return (
       <Modal
         heading={this.props.intl.formatMessage({
-          id: 'torrents.add.heading',
-          defaultMessage: 'Add Torrents'
+          id: "torrents.add.heading",
+          defaultMessage: "Add Torrents"
         })}
         dismiss={this.dismissModal}
         tabs={tabs}
